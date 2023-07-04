@@ -1,24 +1,16 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../utils/style/colors.dart';
+import '../../core/view_models/auth_view_model.dart';
+import '../../utils/style/colors.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class SignupScreen extends StatelessWidget {
+  SignupScreen({super.key});
 
-  @override
-  State<SignupScreen> createState() => _SignupScreenState();
-}
-
-class _SignupScreenState extends State<SignupScreen> {
-  bool _passwordVisible = false;
-  bool _confirmPasswordVisible = false;
-  final emailcontroller = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-  final passwordcontroller = TextEditingController();
-  final confirmPasswordcontroller = TextEditingController();
+  final AuthViwModel authViewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +52,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           color: Colors.grey.shade200.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(45)),
                       child: Form(
-                        key: _formKey,
+                        key: authViewModel.formKey,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -88,7 +80,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   margin: const EdgeInsets.only(
                                       left: 20, right: 20),
                                   child: TextFormField(
-                                    controller: emailcontroller,
+                                    controller: authViewModel.emailcontroller,
                                     keyboardType: TextInputType.emailAddress,
                                     decoration: InputDecoration(
                                         contentPadding:
@@ -118,8 +110,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                   margin: const EdgeInsets.only(
                                       left: 20, right: 20),
                                   child: TextFormField(
-                                    obscureText: !_passwordVisible,
-                                    controller: passwordcontroller,
+                                    obscureText: !authViewModel.passwordVisible,
+                                    controller:
+                                        authViewModel.passwordcontroller,
                                     keyboardType: TextInputType.visiblePassword,
                                     decoration: InputDecoration(
                                       contentPadding:
@@ -139,17 +132,16 @@ class _SignupScreenState extends State<SignupScreen> {
                                       suffixIcon: IconButton(
                                         icon: Icon(
                                           // Based on passwordVisible state choose the icon
-                                          _passwordVisible
+                                          authViewModel.passwordVisible
                                               ? Icons.visibility_off
                                               : Icons.visibility,
                                           color: fontBlue,
                                         ),
                                         onPressed: () {
                                           // Update the state i.e. toogle the state of passwordVisible variable
-                                          setState(() {
-                                            _passwordVisible =
-                                                !_passwordVisible;
-                                          });
+
+                                          authViewModel.passwordVisible =
+                                              !authViewModel.passwordVisible;
                                         },
                                       ),
                                     ),
@@ -166,8 +158,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                   margin: const EdgeInsets.only(
                                       left: 20, right: 20),
                                   child: TextFormField(
-                                    obscureText: !_confirmPasswordVisible,
-                                    controller: confirmPasswordcontroller,
+                                    obscureText:
+                                        !authViewModel.confirmPasswordVisible,
+                                    controller:
+                                        authViewModel.confirmPasswordcontroller,
                                     keyboardType: TextInputType.visiblePassword,
                                     decoration: InputDecoration(
                                       contentPadding:
@@ -187,17 +181,17 @@ class _SignupScreenState extends State<SignupScreen> {
                                       suffixIcon: IconButton(
                                         icon: Icon(
                                           // Based on passwordVisible state choose the icon
-                                          _confirmPasswordVisible
+                                          authViewModel.confirmPasswordVisible
                                               ? Icons.visibility_off
                                               : Icons.visibility,
                                           color: fontBlue,
                                         ),
                                         onPressed: () {
                                           // Update the state i.e. toogle the state of passwordVisible variable
-                                          setState(() {
-                                            _confirmPasswordVisible =
-                                                !_confirmPasswordVisible;
-                                          });
+
+                                          authViewModel.confirmPasswordVisible =
+                                              !authViewModel
+                                                  .confirmPasswordVisible;
                                         },
                                       ),
                                     ),
@@ -205,7 +199,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                       if (value == null || value.isEmpty) {
                                         return "Champs obligatoires";
                                       } else if (value !=
-                                          passwordcontroller.text) {
+                                          authViewModel
+                                              .passwordcontroller.text) {
                                         return "les mots de passe incorect";
                                       }
                                       return null;
@@ -219,7 +214,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                   const EdgeInsets.only(left: 20, right: 20),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (_formKey.currentState!.validate()) {}
+                                  if (authViewModel.formKey.currentState!
+                                      .validate()) {}
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: fontBlue,

@@ -5,7 +5,8 @@ import 'package:flutter_mvvm_getx/core/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../utils/style/colors.dart';
+import '../../core/view_models/auth_view_model.dart';
+import '../../utils/style/colors.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -15,13 +16,7 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-  final emailcontroller = TextEditingController();
-
-  final _formKey = GlobalKey<FormState>();
-  final passwordcontroller = TextEditingController();
-  bool loading = false;
-
-  bool _passwordVisible = false;
+  final AuthViwModel authViewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +58,7 @@ class _SigninScreenState extends State<SigninScreen> {
                           color: Colors.grey.shade200.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(45)),
                       child: Form(
-                        key: _formKey,
+                        key: authViewModel.formKey,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -92,7 +87,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                       left: 20, right: 20),
                                   child: TextFormField(
                                     keyboardType: TextInputType.emailAddress,
-                                    controller: emailcontroller,
+                                    controller: authViewModel.emailcontroller,
                                     decoration: InputDecoration(
                                       contentPadding:
                                           const EdgeInsets.only(left: 30),
@@ -123,8 +118,9 @@ class _SigninScreenState extends State<SigninScreen> {
                                       left: 20, right: 20),
                                   child: TextFormField(
                                     keyboardType: TextInputType.visiblePassword,
-                                    controller: passwordcontroller,
-                                    obscureText: !_passwordVisible,
+                                    controller:
+                                        authViewModel.passwordcontroller,
+                                    obscureText: !authViewModel.passwordVisible,
                                     decoration: InputDecoration(
                                       contentPadding:
                                           const EdgeInsets.only(left: 30),
@@ -143,17 +139,16 @@ class _SigninScreenState extends State<SigninScreen> {
                                       suffixIcon: IconButton(
                                         icon: Icon(
                                           // Based on passwordVisible state choose the icon
-                                          _passwordVisible
+                                          authViewModel.passwordVisible
                                               ? Icons.visibility_off
                                               : Icons.visibility,
                                           color: fontBlue,
                                         ),
                                         onPressed: () {
                                           // Update the state i.e. toogle the state of passwordVisible variable
-                                          setState(() {
-                                            _passwordVisible =
-                                                !_passwordVisible;
-                                          });
+
+                                          authViewModel.passwordVisible =
+                                              !authViewModel.passwordVisible;
                                         },
                                       ),
                                     ),
@@ -172,10 +167,9 @@ class _SigninScreenState extends State<SigninScreen> {
                                   const EdgeInsets.only(left: 20, right: 20),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    setState(() {
-                                      loading = true;
-                                    });
+                                  if (authViewModel.formKey.currentState!
+                                      .validate()) {
+                                    authViewModel.loading = true;
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -189,7 +183,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                   width: double.infinity,
                                   height:
                                       MediaQuery.of(context).size.width * .13,
-                                  child: loading
+                                  child: authViewModel.loading
                                       ? const CircularProgressIndicator(
                                           color: fontyellow,
                                         )
